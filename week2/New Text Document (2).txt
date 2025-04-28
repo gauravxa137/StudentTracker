@@ -1,0 +1,70 @@
+
+Programming Assignment: "Virtual Pet Simulator"
+Objective:
+Create a Virtual Pet Simulator where users can interact with a virtual pet by feeding it, playing with it, and monitoring its happiness and hunger levels. This assignment will help you practice using functions, loops, conditionals, and data structures like dictionaries.
+
+Assignment: Build a Virtual Pet Simulator
+Your task is to build a simple command-line pet simulator that allows users to:
+
+Feed their pet.
+
+Play with their pet.
+
+Check the pet’s happiness and hunger levels.
+
+Quit the game when they’re done.
+
+Requirements:
+
+Pet Status:
+
+The pet should have attributes like:
+▪ Happiness level (starts at 50).
+▪ Hunger level (starts at 50).
+
+Both levels should range from 0 to 100.
+
+When the user feeds the pet, its hunger decreases, and when they play with it, its happiness increases.
+
+If hunger gets too high (e.g., >80), the pet becomes sad, and happiness decreases.
+
+Actions:
+
+The user should be able to:
+▪ Feed the pet (decreases hunger, slightly decreases happiness).
+▪ Play with the pet (increases happiness, slightly increases hunger).
+▪ Check Status: Display current hunger and happiness levels.
+
+User Menu:
+
+Create a menu where the user can:
+▪ Feed the pet.
+▪ Play with the pet.
+▪ Check the pet's status.
+▪ Quit the game.
+
+Automatic Changes:
+
+As time passes (e.g., every few user actions), the pet’s hunger should gradually increase, and happiness should decrease, simulating the need for constant care.
+
+Game Over Conditions:
+
+If hunger reaches 100 or happiness reaches 0, the game should display a message indicating that the pet has become too hungry or sad and end the simulation.
+
+Bonus (Optional):
+
+Allow the user to name the pet at the start.
+
+Add more actions like giving the pet a toy or medicine.
+
+Add multiple pets that the user can manage.
+
+Implement a random event system (e.g., pet finds a snack or gets sick).
+
+Instructions:
+
+Write clean code and use functions for each major action (feed, play, check status).
+
+Ensure your program handles user input and provides clear feedback.
+
+Submit your Python code in PDF with comments & output screenshots explaining your logic. (Copy your code, paste in MS Word, save as PDF, upload on app)

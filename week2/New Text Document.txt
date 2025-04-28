@@ -1,0 +1,54 @@
+Python Programming Assignment: "Secret Code Generator"
+Objective:
+Get creative with Python by building a fun secret code generator that can convert regular text into a coded message and decode it back. This will help you practice using functions, loops, string manipulation, and dictionaries.
+
+Assignment: Create a Secret Code Generator
+Your task is to write a Python program that can:
+
+Encode a message by shifting the letters in the alphabet (similar to a Caesar cipher).
+
+Decode a message back to its original form.
+
+Allow the user to choose between encoding or decoding.
+
+Requirements:
+
+Basic Functionality:
+
+Encode a message: Ask the user for a message and a shift number. Each letter in the message should be shifted by that number (e.g., A -> C with a shift of 2).
+
+Decode a message: Take a coded message and a shift number, and shift the letters back to their original form.
+
+The user should be able to input both uppercase and lowercase letters, and they should be encoded correctly.
+
+User Menu:
+
+Create a simple menu that asks the user if they want to:
+▪ Encode a message.
+▪ Decode a message.
+▪ Exit the program.
+
+Data Handling:
+
+Use string manipulation to shift each letter.
+
+Ignore or skip characters that aren’t letters (e.g., spaces, punctuation marks).
+
+Functions:
+
+Write functions to:
+▪ Encode a message.
+▪ Decode a message.
+▪ Handle user input and menu choices.
+
+Edge Cases:
+
+Handle scenarios like wrapping around the alphabet (e.g., shifting Z forward by 2 should result in B).
+
+Handle invalid inputs, like trying to decode without entering a valid shift.
+
+Instructions:
+
+Focus on clean code and modular functions.
+
+Submit your Python code in a PDF file with comments & output screenshots explaining your logic. (Copy your code, paste in MS Word, save as PDF, upload on app)
