@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from database import StudentTracker
+from app.database import StudentTracker
 import os
 import sys
 print(sys.path)
