@@ -1,1 +1,1 @@
-start: gunicorn app.app:app --chdir src
+start: gunicorn app.app:app --chdir StudentTracker
