@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from app.database import StudentTracker
+# from app.database import StudentTracker
 import os
 import sys
 print(sys.path)
@@ -7,7 +7,7 @@ print(sys.path)
 app = Flask(__name__)
 app.secret_key = 'secret_key_for_session'
 
-tracker = StudentTracker()
+# tracker = StudentTracker()
 
 @app.route('/')
 def home():
