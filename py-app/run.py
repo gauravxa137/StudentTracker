@@ -3,6 +3,7 @@ import logging
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import jsonify  # Add to imports
 from database import StudentTracker
+from flask import Flask, render_template
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
