@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
+app.secret_key = os.environ.get('SECRET_KEY', 'fallback-secret-key') 
+
 # Use environment variable for secret key with fallback for development
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 
