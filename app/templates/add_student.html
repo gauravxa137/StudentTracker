@@ -1,16 +1,181 @@
 {% extends "base.html" %}
 
+{% block title %}Add Student - Student Performance Tracker{% endblock %}
+
 {% block content %}
-<h2>Add Student</h2>
-<form method="POST">
-  <div class="mb-3">
-    <label>Name:</label>
-    <input type="text" name="name" class="form-control" required>
-  </div>
-  <div class="mb-3">
-    <label>Roll Number:</label>
-    <input type="text" name="roll_number" class="form-control" required>
-  </div>
-  <button type="submit" class="btn btn-success">Add Student</button>
-</form>
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">
+                    <i class="bi bi-person-plus-fill me-2"></i>
+                    Add New Student
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" novalidate>
+                    <div class="mb-4">
+                        <label for="name" class="form-label">
+                            <i class="bi bi-person me-1"></i>Student Name
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="name" 
+                            name="name" 
+                            required 
+                            maxlength="100"
+                            placeholder="Enter student's full name"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Enter the student's complete name (max 100 characters)"
+                        >
+                        <div class="invalid-feedback">
+                            Please provide a valid student name.
+                        </div>
+                        <div class="form-text">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Maximum 100 characters allowed
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="roll_number" class="form-label">
+                            <i class="bi bi-hash me-1"></i>Roll Number
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="roll_number" 
+                            name="roll_number" 
+                            required 
+                            maxlength="20"
+                            placeholder="Enter unique roll number"
+                            pattern="[A-Za-z0-9\-_]+"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Alphanumeric characters, hyphens, and underscores only (max 20 characters)"
+                        >
+                        <div class="invalid-feedback">
+                            Please provide a valid roll number (alphanumeric, -, _ only).
+                        </div>
+                        <div class="form-text">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Must be unique. Use letters, numbers, hyphens, or underscores only
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('home') }}" class="btn btn-outline-secondary me-md-2">
+                            <i class="bi bi-arrow-left me-1"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-1"></i>Add Student
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="mt-4">
+            <div class="card border-info">
+                <div class="card-header bg-info bg-opacity-10 border-info">
+                    <h6 class="card-title mb-0 text-info">
+                        <i class="bi bi-lightbulb me-1"></i>Tips for Adding Students
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="bi bi-check2 text-success me-2"></i>
+                            Use meaningful roll numbers (e.g., 2025-CS-001, STU_2025_001)
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2 text-success me-2"></i>
+                            Double-check spelling of student names
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2 text-success me-2"></i>
+                            Roll numbers must be unique across all students
+                        </li>
+                        <li class="mb-0">
+                            <i class="bi bi-check2 text-success me-2"></i>
+                            You can add grades for the student after registration
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Client-side form validation
+    const form = document.querySelector('form');
+    const nameInput = document.getElementById('name');
+    const rollNumberInput = document.getElementById('roll_number');
+
+    // Real-time validation
+    nameInput.addEventListener('input', function() {
+        validateName(this);
+    });
+
+    rollNumberInput.addEventListener('input', function() {
+        validateRollNumber(this);
+    });
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const isNameValid = validateName(nameInput);
+        const isRollNumberValid = validateRollNumber(rollNumberInput);
+
+        if (isNameValid && isRollNumberValid) {
+            form.classList.add('was-validated');
+            // Allow form submission
+            this.submit();
+        } else {
+            form.classList.add('was-validated');
+        }
+    });
+
+    function validateName(input) {
+        const value = input.value.trim();
+        const isValid = value.length >= 2 && value.length <= 100;
+        
+        if (isValid) {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+        } else {
+            input.classList.remove('is-valid');
+            input.classList.add('is-invalid');
+        }
+        
+        return isValid;
+    }
+
+    function validateRollNumber(input) {
+        const value = input.value.trim();
+        const pattern = /^[A-Za-z0-9\-_]+$/;
+        const isValid = value.length >= 1 && value.length <= 20 && pattern.test(value);
+        
+        if (isValid) {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+        } else {
+            input.classList.remove('is-valid');
+            input.classList.add('is-invalid');
+        }
+        
+        return isValid;
+    }
+});
+</script>
 {% endblock %}

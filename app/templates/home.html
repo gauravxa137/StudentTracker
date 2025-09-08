@@ -1,6 +1,210 @@
 {% extends "base.html" %}
 
+{% block title %}Home - Student Performance Tracker{% endblock %}
+
 {% block content %}
-<h2>Welcome to the Student Performance Tracker!</h2>
-<p>Use the navigation buttons above to manage students and grades.</p>
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <!-- Welcome Section -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 text-primary mb-3">
+                <i class="bi bi-mortarboard-fill me-3"></i>
+                Student Performance Tracker
+            </h1>
+            <p class="lead text-muted">
+                Efficiently manage student records and track academic performance with our comprehensive tracking system.
+            </p>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="bi bi-person-plus-fill text-primary" style="font-size: 2.5rem;"></i>
+                        </div>
+                        <h5 class="card-title">Add Student</h5>
+                        <p class="card-text text-muted">Register new students with unique roll numbers</p>
+                        <a href="{{ url_for('add_student') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-plus-circle me-1"></i>Add Student
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="bi bi-clipboard-plus-fill text-success" style="font-size: 2.5rem;"></i>
+                        </div>
+                        <h5 class="card-title">Add Grade</h5>
+                        <p class="card-text text-muted">Record grades for subjects and track progress</p>
+                        <a href="{{ url_for('add_grade') }}" class="btn btn-outline-success">
+                            <i class="bi bi-plus-circle me-1"></i>Add Grade
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="bi bi-people-fill text-info" style="font-size: 2.5rem;"></i>
+                        </div>
+                        <h5 class="card-title">All Students</h5>
+                        <p class="card-text text-muted">View complete student roster and performance</p>
+                        <a href="{{ url_for('view_all_students') }}" class="btn btn-outline-info">
+                            <i class="bi bi-eye me-1"></i>View All
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="bi bi-bar-chart-fill text-warning" style="font-size: 2.5rem;"></i>
+                        </div>
+                        <h5 class="card-title">Statistics</h5>
+                        <p class="card-text text-muted">View performance analytics and insights</p>
+                        <button class="btn btn-outline-warning" onclick="loadStats()">
+                            <i class="bi bi-graph-up me-1"></i>View Stats
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-lightbulb-fill text-warning me-2"></i>
+                            Key Features
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                    <div>
+                                        <strong>Unique Roll Numbers</strong>
+                                        <small class="d-block text-muted">Prevent duplicate student registrations</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                    <div>
+                                        <strong>Subject-wise Grading</strong>
+                                        <small class="d-block text-muted">Track performance across multiple subjects</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                    <div>
+                                        <strong>Automatic Averages</strong>
+                                        <small class="d-block text-muted">Calculate GPA and performance metrics</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                    <div>
+                                        <strong>Secure Database</strong>
+                                        <small class="d-block text-muted">SQLite backend with data integrity</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Modal -->
+<div class="modal fade" id="statsModal" tabindex="-1" aria-labelledby="statsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="statsModalLabel">
+                    <i class="bi bi-bar-chart-fill me-2"></i>System Statistics
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="statsContent">
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function loadStats() {
+    const modal = new bootstrap.Modal(document.getElementById('statsModal'));
+    modal.show();
+    
+    // Fetch real data from API
+    fetch('/api/statistics')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('statsContent').innerHTML = `
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h4 class="text-primary mb-1">${data.total_students}</h4>
+                                <small class="text-muted">Total Students</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h4 class="text-success mb-1">${data.total_grades}</h4>
+                                <small class="text-muted">Total Grades</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h4 class="text-info mb-1">${data.overall_average}</h4>
+                                <small class="text-muted">Avg Grade</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        })
+        .catch(error => {
+            document.getElementById('statsContent').innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Failed to load statistics. Please try again.
+                </div>
+            `;
+        });
+}
+
+</script>
 {% endblock %}
