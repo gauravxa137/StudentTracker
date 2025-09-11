@@ -1,19 +1,27 @@
 {% extends "base.html" %}
 
-{% block title %}Home - Student Performance Tracker{% endblock %}
+{% block title %}Student Performance Tracker - [Your Name]{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-10">
-        <!-- Welcome Section -->
+        <!-- Hero Section -->
         <div class="text-center mb-5">
             <h1 class="display-4 text-primary mb-3">
                 <i class="bi bi-mortarboard-fill me-3"></i>
                 Student Performance Tracker
             </h1>
-            <p class="lead text-muted">
-                Efficiently manage student records and track academic performance with our comprehensive tracking system.
+            <p class="lead text-muted mb-4">
+                Efficiently manage student records and track academic performance with comprehensive tracking system.
             </p>
+            
+            <!-- Single Line Technical Features -->
+            <div class="mb-4 p-3 bg-light rounded">
+                <small class="text-muted">
+                    <strong>Technical Features:</strong> Flask Backend with SQLite • Bootstrap Responsive Frontend • Complete CRUD Operations • Cloud Deployment on Render with CI/CD
+                    <span class="text-primary ms-2">• Developed by [Your Name]</span>
+                </small>
+            </div>
         </div>
 
         <!-- Quick Actions -->
@@ -79,7 +87,7 @@
             </div>
         </div>
 
-        <!-- Features Section -->
+        <!-- Application Features -->
         <div class="row">
             <div class="col-lg-8 mx-auto">
                 <div class="card">
@@ -122,8 +130,8 @@
                                 <div class="d-flex align-items-start">
                                     <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
                                     <div>
-                                        <strong>Secure Database</strong>
-                                        <small class="d-block text-muted">SQLite backend with data integrity</small>
+                                        <strong>Responsive Design</strong>
+                                        <small class="d-block text-muted">Works seamlessly on all devices</small>
                                     </div>
                                 </div>
                             </div>
@@ -155,56 +163,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_scripts %}
-<script>
-    function loadStats() {
-    const modal = new bootstrap.Modal(document.getElementById('statsModal'));
-    modal.show();
-    
-    // Fetch real data from API
-    fetch('/api/statistics')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('statsContent').innerHTML = `
-                <div class="row text-center">
-                    <div class="col-4">
-                        <div class="card bg-light">
-                            <div class="card-body">
-                                <h4 class="text-primary mb-1">${data.total_students}</h4>
-                                <small class="text-muted">Total Students</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="card bg-light">
-                            <div class="card-body">
-                                <h4 class="text-success mb-1">${data.total_grades}</h4>
-                                <small class="text-muted">Total Grades</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="card bg-light">
-                            <div class="card-body">
-                                <h4 class="text-info mb-1">${data.overall_average}</h4>
-                                <small class="text-muted">Avg Grade</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        })
-        .catch(error => {
-            document.getElementById('statsContent').innerHTML = `
-                <div class="alert alert-danger">
-                    <i class="bi bi-exclamation-triangle me-2"></i>
-                    Failed to load statistics. Please try again.
-                </div>
-            `;
-        });
-}
-
-</script>
 {% endblock %}

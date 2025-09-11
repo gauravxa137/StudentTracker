@@ -5,12 +5,11 @@
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <!-- Header -->
+        <!-- Header Section -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="mb-1">
-                    <i class="bi bi-people-fill text-primary me-2"></i>
-                    All Students
+                <h2 class="text-primary mb-0">
+                    <i class="bi bi-people-fill me-2"></i>All Students
                 </h2>
                 <p class="text-muted mb-0">
                     {% if students %}
@@ -22,427 +21,239 @@
             </div>
             <div>
                 <a href="{{ url_for('add_student') }}" class="btn btn-primary">
-                    <i class="bi bi-person-plus me-1"></i>Add Student
+                    <i class="bi bi-person-plus-fill me-1"></i>Add Student
                 </a>
             </div>
         </div>
 
         {% if students %}
-            <!-- Search and Filter -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="bi bi-search"></i>
-                                </span>
-                                <input type="text" class="form-control" id="searchInput" placeholder="Search by name or roll number...">
-                            </div>
+        <!-- Search and Filters -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search by name or roll number...">
                         </div>
-                        <div class="col-md-3">
-                            <select class="form-select" id="performanceFilter">
-                                <option value="">All Performance Levels</option>
-                                <option value="excellent">Excellent (90%+)</option>
-                                <option value="very-good">Very Good (80-89%)</option>
-                                <option value="good">Good (70-79%)</option>
-                                <option value="satisfactory">Satisfactory (60-69%)</option>
-                                <option value="needs-improvement">Needs Improvement (<60%)</option>
-                                <option value="no-grades">No Grades</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
-                                <i class="bi bi-x-circle me-1"></i>Clear Filters
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="performanceFilter">
+                            <option value="">All Performance Levels</option>
+                            <option value="excellent">Excellent (90%+)</option>
+                            <option value="very-good">Very Good (80-89%)</option>
+                            <option value="good">Good (70-79%)</option>
+                            <option value="satisfactory">Satisfactory (60-69%)</option>
+                            <option value="needs-improvement">Needs Improvement (<60%)</option>
+                            <option value="no-grades">No Grades</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="btn-group w-100" role="group">
+                            <button type="button" class="btn btn-outline-secondary active" id="tableView">
+                                <i class="bi bi-table"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" id="cardView">
+                                <i class="bi bi-grid-3x3-gap"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="clearFilters()">
+                                <i class="bi bi-x-circle"></i>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Students Table -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">
-                            <i class="bi bi-table me-2"></i>Student Records
-                        </h5>
-                        <div class="btn-group btn-group-sm" role="group">
-                            <button type="button" class="btn btn-outline-secondary" id="cardView">
-                                <i class="bi bi-grid"></i>
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary active" id="tableView">
-                                <i class="bi bi-list"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <!-- Table View -->
-                    <div id="tableViewContent">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0" id="studentsTable">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th scope="col" class="sortable" data-sort="name">
-                                            <i class="bi bi-person me-1"></i>Name
-                                            <i class="bi bi-chevron-expand text-muted ms-1"></i>
-                                        </th>
-                                        <th scope="col" class="sortable" data-sort="roll">
-                                            <i class="bi bi-hash me-1"></i>Roll Number
-                                            <i class="bi bi-chevron-expand text-muted ms-1"></i>
-                                        </th>
-                                        <th scope="col" class="sortable" data-sort="subjects">
-                                            <i class="bi bi-book me-1"></i>Subjects
-                                            <i class="bi bi-chevron-expand text-muted ms-1"></i>
-                                        </th>
-                                        <th scope="col" class="sortable" data-sort="average">
-                                            <i class="bi bi-calculator me-1"></i>Average
-                                            <i class="bi bi-chevron-expand text-muted ms-1"></i>
-                                        </th>
-                                        <th scope="col">
-                                            <i class="bi bi-bar-chart me-1"></i>Performance
-                                        </th>
-                                        <th scope="col">
-                                            <i class="bi bi-gear me-1"></i>Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for student in students %}
-                                    <tr class="student-row" data-name="{{ student.name.lower() }}" data-roll="{{ student.roll_number.lower() }}" data-average="{{ student.calculate_average() }}">
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar-circle me-2">
-                                                    {{ student.name[0].upper() }}
-                                                </div>
-                                                <strong>{{ student.name }}</strong>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <code class="text-primary">{{ student.roll_number }}</code>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-info">{{ student.get_grade_count() }} subjects</span>
-                                        </td>
-                                        <td>
-                                            {% if student.get_grade_count() > 0 %}
-                                                <strong>{{ "%.2f"|format(student.calculate_average()) }}%</strong>
-                                            {% else %}
-                                                <span class="text-muted">No grades</span>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            {% if student.get_grade_count() > 0 %}
-                                                {% set avg = student.calculate_average() %}
-                                                <div class="d-flex align-items-center">
-                                                    <div class="progress me-2" style="width: 60px; height: 8px;">
-                                                        <div class="progress-bar {% if avg >= 90 %}bg-success{% elif avg >= 80 %}bg-info{% elif avg >= 70 %}bg-primary{% elif avg >= 60 %}bg-warning{% else %}bg-danger{% endif %}" 
-                                                             style="width: {{ avg }}%"></div>
-                                                    </div>
-                                                    <small class="text-muted">
-                                                        {% if avg >= 90 %}A+{% elif avg >= 80 %}A{% elif avg >= 70 %}B{% elif avg >= 60 %}C{% elif avg >= 50 %}D{% else %}F{% endif %}
-                                                    </small>
-                                                </div>
-                                            {% else %}
-                                                <span class="text-muted">-</span>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            <div class="btn-group btn-group-sm">
-                                                <a href="{{ url_for('view_student', roll_number=student.roll_number) }}" 
-                                                   class="btn btn-outline-primary"
-                                                   data-bs-toggle="tooltip"
-                                                   title="View Details">
-                                                    <i class="bi bi-eye"></i>
-                                                </a>
-                                                <a href="{{ url_for('add_grade') }}" 
-                                                   class="btn btn-outline-success"
-                                                   data-bs-toggle="tooltip"
-                                                   title="Add Grade">
-                                                    <i class="bi bi-plus"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Card View -->
-                    <div id="cardViewContent" class="d-none">
-                        <div class="row g-3 p-3">
+        <!-- Table View -->
+        <div id="tableViewContent" class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="sortable" data-sort="name">
+                                    <i class="bi bi-person me-1"></i>Name
+                                    <i class="bi bi-arrow-up-down ms-1"></i>
+                                </th>
+                                <th scope="col" class="sortable" data-sort="roll">
+                                    <i class="bi bi-hash me-1"></i>Roll Number
+                                    <i class="bi bi-arrow-up-down ms-1"></i>
+                                </th>
+                                <th scope="col" class="sortable" data-sort="subjects">
+                                    <i class="bi bi-book me-1"></i>Subjects
+                                    <i class="bi bi-arrow-up-down ms-1"></i>
+                                </th>
+                                <th scope="col" class="sortable" data-sort="average">
+                                    <i class="bi bi-award me-1"></i>Average
+                                    <i class="bi bi-arrow-up-down ms-1"></i>
+                                </th>
+                                <th scope="col">
+                                    <i class="bi bi-graph-up me-1"></i>Performance
+                                </th>
+                                <th scope="col">
+                                    <i class="bi bi-gear me-1"></i>Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             {% for student in students %}
-                            <div class="col-lg-4 col-md-6">
-                                <div class="card student-card h-100" data-name="{{ student.name.lower() }}" data-roll="{{ student.roll_number.lower() }}" data-average="{{ student.calculate_average() }}">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-start justify-content-between mb-3">
-                                            <div>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <div class="avatar-circle me-2">
-                                                        {{ student.name[0].upper() }}
-                                                    </div>
-                                                    <div>
-                                                        <h6 class="mb-0">{{ student.name }}</h6>
-                                                        <small class="text-muted">{{ student.roll_number }}</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {% if student.get_grade_count() > 0 %}
-                                                {% set avg = student.calculate_average() %}
-                                                <span class="badge {% if avg >= 90 %}bg-success{% elif avg >= 80 %}bg-info{% elif avg >= 70 %}bg-primary{% elif avg >= 60 %}bg-warning{% else %}bg-danger{% endif %}">
-                                                    {{ "%.1f"|format(avg) }}%
-                                                </span>
-                                            {% endif %}
+                            <tr class="student-row" 
+                                data-name="{{ student.name.lower() }}" 
+                                data-roll="{{ student.roll_number.lower() }}" 
+                                data-average="{{ student.calculate_average() }}">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle me-2">
+                                            {{ student.name[0].upper() }}
                                         </div>
-                                        
-                                        <div class="mb-3">
-                                            <small class="text-muted">Subjects: </small>
-                                            <span class="badge bg-light text-dark">{{ student.get_grade_count() }}</span>
-                                        </div>
-                                        
-                                        {% if student.get_grade_count() > 0 %}
-                                            <div class="progress mb-3" style="height: 6px;">
-                                                <div class="progress-bar {% if avg >= 90 %}bg-success{% elif avg >= 80 %}bg-info{% elif avg >= 70 %}bg-primary{% elif avg >= 60 %}bg-warning{% else %}bg-danger{% endif %}" 
-                                                     style="width: {{ avg }}%"></div>
-                                            </div>
-                                        {% endif %}
-                                        
-                                        <div class="d-grid gap-2 d-md-flex">
-                                            <a href="{{ url_for('view_student', roll_number=student.roll_number) }}" 
-                                               class="btn btn-primary btn-sm">
-                                                <i class="bi bi-eye me-1"></i>View Details
-                                            </a>
-                                            <a href="{{ url_for('add_grade') }}" 
-                                               class="btn btn-outline-success btn-sm">
-                                                <i class="bi bi-plus me-1"></i>Add Grade
-                                            </a>
-                                        </div>
+                                        <strong>{{ student.name }}</strong>
                                     </div>
+                                </td>
+                                <td>
+                                    <code class="text-primary">{{ student.roll_number }}</code>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">{{ student.get_grade_count() }} subjects</span>
+                                </td>
+                                <td>
+                                    {% if student.get_grade_count() > 0 %}
+                                        <span class="badge {% if student.calculate_average() >= 90 %}bg-success{% elif student.calculate_average() >= 80 %}bg-info{% elif student.calculate_average() >= 70 %}bg-primary{% elif student.calculate_average() >= 60 %}bg-warning{% else %}bg-danger{% endif %} fs-6">
+                                            {{ "%.2f"|format(student.calculate_average()) }}%
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">No grades</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if student.get_grade_count() > 0 %}
+                                        {% set avg = student.calculate_average() %}
+                                        {% if avg >= 90 %}
+                                            <span class="text-success"><i class="bi bi-emoji-smile me-1"></i>Excellent</span>
+                                        {% elif avg >= 80 %}
+                                            <span class="text-info"><i class="bi bi-emoji-smile me-1"></i>Very Good</span>
+                                        {% elif avg >= 70 %}
+                                            <span class="text-primary"><i class="bi bi-emoji-neutral me-1"></i>Good</span>
+                                        {% elif avg >= 60 %}
+                                            <span class="text-warning"><i class="bi bi-emoji-neutral me-1"></i>Satisfactory</span>
+                                        {% else %}
+                                            <span class="text-danger"><i class="bi bi-emoji-frown me-1"></i>Needs Improvement</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-muted"><i class="bi bi-dash-circle me-1"></i>No Data</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ url_for('view_student', roll_number=student.roll_number) }}" 
+                                           class="btn btn-outline-primary" 
+                                           data-bs-toggle="tooltip" 
+                                           title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="{{ url_for('add_grade') }}" 
+                                           class="btn btn-outline-success" 
+                                           data-bs-toggle="tooltip" 
+                                           title="Add Grade">
+                                            <i class="bi bi-plus"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card View -->
+        <div id="cardViewContent" class="d-none">
+            <div class="row g-4">
+                {% for student in students %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card student-card h-100" 
+                         data-name="{{ student.name.lower() }}" 
+                         data-roll="{{ student.roll_number.lower() }}" 
+                         data-average="{{ student.calculate_average() }}">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="avatar-circle me-3">
+                                    {{ student.name[0].upper() }}
+                                </div>
+                                <div>
+                                    <h5 class="card-title mb-0">{{ student.name }}</h5>
+                                    <small class="text-muted">{{ student.roll_number }}</small>
                                 </div>
                             </div>
-                            {% endfor %}
+                            
+                            <div class="row text-center mb-3">
+                                <div class="col-6">
+                                    <div class="border-end">
+                                        <h6 class="text-primary mb-0">{{ student.get_grade_count() }}</h6>
+                                        <small class="text-muted">Subjects</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <h6 class="mb-0 {% if student.get_grade_count() > 0 %}{% if student.calculate_average() >= 90 %}text-success{% elif student.calculate_average() >= 70 %}text-primary{% elif student.calculate_average() >= 60 %}text-warning{% else %}text-danger{% endif %}{% else %}text-muted{% endif %}">
+                                        {% if student.get_grade_count() > 0 %}
+                                            {{ "%.1f"|format(student.calculate_average()) }}%
+                                        {% else %}
+                                            --
+                                        {% endif %}
+                                    </h6>
+                                    <small class="text-muted">Average</small>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 d-md-flex">
+                                <a href="{{ url_for('view_student', roll_number=student.roll_number) }}" 
+                                   class="btn btn-outline-primary btn-sm flex-fill">
+                                    <i class="bi bi-eye me-1"></i>View
+                                </a>
+                                <a href="{{ url_for('add_grade') }}" 
+                                   class="btn btn-outline-success btn-sm flex-fill">
+                                    <i class="bi bi-plus me-1"></i>Grade
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
+        </div>
 
-            <!-- No Results Message -->
-            <div id="noResults" class="text-center py-5 d-none">
-                <i class="bi bi-search text-muted" style="font-size: 3rem;"></i>
-                <h5 class="mt-3 text-muted">No Students Found</h5>
-                <p class="text-muted">Try adjusting your search criteria or filters.</p>
-            </div>
         {% else %}
-            <!-- Empty State -->
-            <div class="card">
-                <div class="card-body text-center py-5">
-                    <i class="bi bi-people text-muted" style="font-size: 4rem;"></i>
-                    <h4 class="mt-4 mb-3">No Students Yet</h4>
-                    <p class="text-muted mb-4">Start by adding your first student to the system.</p>
-                    <a href="{{ url_for('add_student') }}" class="btn btn-primary btn-lg">
-                        <i class="bi bi-person-plus me-2"></i>Add First Student
-                    </a>
-                </div>
+        <!-- Empty State -->
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="bi bi-people text-muted" style="font-size: 4rem;"></i>
             </div>
+            <h4 class="text-muted">No Students Found</h4>
+            <p class="text-muted mb-4">
+                Get started by adding your first student to the system.
+            </p>
+            <a href="{{ url_for('add_student') }}" class="btn btn-primary">
+                <i class="bi bi-person-plus-fill me-1"></i>Add First Student
+            </a>
+        </div>
         {% endif %}
+
+        <!-- No Results Message -->
+        <div id="noResults" class="text-center py-5 d-none">
+            <div class="mb-4">
+                <i class="bi bi-search text-muted" style="font-size: 4rem;"></i>
+            </div>
+            <h4 class="text-muted">No Students Match Your Search</h4>
+            <p class="text-muted mb-4">
+                Try adjusting your search criteria or filters.
+            </p>
+            <button class="btn btn-outline-primary" onclick="clearFilters()">
+                <i class="bi bi-x-circle me-1"></i>Clear Filters
+            </button>
+        </div>
     </div>
 </div>
-
-<style>
-.avatar-circle {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, #007bff, #0056b3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.sortable {
-    cursor: pointer;
-    user-select: none;
-    transition: background-color 0.2s;
-}
-
-.sortable:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-.student-card {
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.student-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-</style>
-{% endblock %}
-
-{% block extra_scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    const performanceFilter = document.getElementById('performanceFilter');
-    const tableView = document.getElementById('tableView');
-    const cardView = document.getElementById('cardView');
-    const tableContent = document.getElementById('tableViewContent');
-    const cardContent = document.getElementById('cardViewContent');
-    const noResults = document.getElementById('noResults');
-
-    // Search functionality
-    if (searchInput) {
-        searchInput.addEventListener('input', filterStudents);
-    }
-    
-    if (performanceFilter) {
-        performanceFilter.addEventListener('change', filterStudents);
-    }
-
-    // View toggle
-    if (tableView && cardView) {
-        tableView.addEventListener('click', function() {
-            showTableView();
-        });
-
-        cardView.addEventListener('click', function() {
-            showCardView();
-        });
-    }
-
-    // Sorting functionality
-    document.querySelectorAll('.sortable').forEach(header => {
-        header.addEventListener('click', function() {
-            sortTable(this.dataset.sort);
-        });
-    });
-
-    function filterStudents() {
-        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
-        const performanceLevel = performanceFilter ? performanceFilter.value : '';
-        
-        const rows = document.querySelectorAll('.student-row');
-        const cards = document.querySelectorAll('.student-card');
-        let visibleCount = 0;
-
-        // Filter table rows
-        rows.forEach(row => {
-            const name = row.dataset.name || '';
-            const roll = row.dataset.roll || '';
-            const average = parseFloat(row.dataset.average) || 0;
-            
-            const matchesSearch = name.includes(searchTerm) || roll.includes(searchTerm);
-            const matchesPerformance = checkPerformanceMatch(average, performanceLevel);
-            
-            if (matchesSearch && matchesPerformance) {
-                row.style.display = '';
-                visibleCount++;
-            } else {
-                row.style.display = 'none';
-            }
-        });
-
-        // Filter cards
-        cards.forEach(card => {
-            const name = card.dataset.name || '';
-            const roll = card.dataset.roll || '';
-            const average = parseFloat(card.dataset.average) || 0;
-            
-            const matchesSearch = name.includes(searchTerm) || roll.includes(searchTerm);
-            const matchesPerformance = checkPerformanceMatch(average, performanceLevel);
-            
-            if (matchesSearch && matchesPerformance) {
-                card.parentElement.style.display = '';
-                visibleCount++;
-            } else {
-                card.parentElement.style.display = 'none';
-            }
-        });
-
-        // Show/hide no results message
-        if (noResults) {
-            noResults.classList.toggle('d-none', visibleCount > 0);
-        }
-    }
-
-    function checkPerformanceMatch(average, level) {
-        if (!level) return true;
-        
-        switch (level) {
-            case 'excellent': return average >= 90;
-            case 'very-good': return average >= 80 && average < 90;
-            case 'good': return average >= 70 && average < 80;
-            case 'satisfactory': return average >= 60 && average < 70;
-            case 'needs-improvement': return average > 0 && average < 60;
-            case 'no-grades': return average === 0;
-            default: return true;
-        }
-    }
-
-    function showTableView() {
-        tableView.classList.add('active');
-        cardView.classList.remove('active');
-        tableContent.classList.remove('d-none');
-        cardContent.classList.add('d-none');
-    }
-
-    function showCardView() {
-        cardView.classList.add('active');
-        tableView.classList.remove('active');
-        cardContent.classList.remove('d-none');
-        tableContent.classList.add('d-none');
-    }
-
-    function sortTable(column) {
-        const table = document.getElementById('studentsTable');
-        const tbody = table.querySelector('tbody');
-        const rows = Array.from(tbody.querySelectorAll('tr'));
-        
-        rows.sort((a, b) => {
-            let aVal, bVal;
-            
-            switch (column) {
-                case 'name':
-                    aVal = a.dataset.name;
-                    bVal = b.dataset.name;
-                    break;
-                case 'roll':
-                    aVal = a.dataset.roll;
-                    bVal = b.dataset.roll;
-                    break;
-                case 'average':
-                    aVal = parseFloat(a.dataset.average) || 0;
-                    bVal = parseFloat(b.dataset.average) || 0;
-                    return bVal - aVal; // Descending for averages
-                case 'subjects':
-                    aVal = parseInt(a.querySelector('.badge').textContent) || 0;
-                    bVal = parseInt(b.querySelector('.badge').textContent) || 0;
-                    return bVal - aVal; // Descending for subject count
-                default:
-                    return 0;
-            }
-            
-            if (typeof aVal === 'string') {
-                return aVal.localeCompare(bVal);
-            }
-            return aVal - bVal;
-        });
-        
-        rows.forEach(row => tbody.appendChild(row));
-    }
-
-    window.clearFilters = function() {
-        if (searchInput) searchInput.value = '';
-        if (performanceFilter) performanceFilter.value = '';
-        filterStudents();
-    };
-});
-</script>
 {% endblock %}
