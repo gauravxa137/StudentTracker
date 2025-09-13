@@ -11,7 +11,7 @@ This project allows registration of students, entry and update of subject grades
 Add images by updating the src attribute values below after uploading screenshots to the repository or an image host
 
 <p align="center">
-  <img src="" alt="Home page overview" width="900">
+  <img src="\screenshots\Home_Page.png" alt="Home page overview" width="900">
 </p>
 
 <br><br>
@@ -21,6 +21,14 @@ Add images by updating the src attribute values below after uploading screenshot
 </p>
 
 <br><br>
+
+<p align="center">
+  <img src="" alt="Student detail with subjects and performance" width="900">
+</p>
+
+<p align="center">
+  <img src="" alt="Student detail with subjects and performance" width="900">
+</p>
 
 <p align="center">
   <img src="" alt="Student detail with subjects and performance" width="900">
