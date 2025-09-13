@@ -17,21 +17,21 @@ Add images by updating the src attribute values below after uploading screenshot
 <br><br>
 
 <p align="center">
-  <img src="" alt="All students list with search and filters" width="900">
+  <img src="\screenshots\All_student_list.png" alt="All students list with search and filters" width="900">
 </p>
 
 <br><br>
 
 <p align="center">
-  <img src="" alt="Student detail with subjects and performance" width="900">
+  <img src="\screenshots\add_new_student.png" alt="Add new students" width="900">
 </p>
 
 <p align="center">
-  <img src="" alt="Student detail with subjects and performance" width="900">
+  <img src="\screenshots\add_grade.png" alt="Add Grade" width="900">
 </p>
 
 <p align="center">
-  <img src="" alt="Student detail with subjects and performance" width="900">
+  <img src="\screenshots\stats.png" alt="Stats" width="900">
 </p>
 
 ## Features
