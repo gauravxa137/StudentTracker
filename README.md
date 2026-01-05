@@ -1,143 +1,148 @@
-# <a href="https://studenttracker-vd0h.onrender.com/">Student Performance Tracker</a>
+# 🎓 Student Performance Tracker
 
-A Flask web application that manages students, subjects, and grades with a clean interface, simple data model, and a small JSON statistics endpoint. It demonstrates routing, server side templating, validated forms, client side filtering and sorting, and a print friendly student report.
+A robust, Flask-based web application designed to manage student records, subject grades, and academic performance metrics. This project demonstrates a raw SQL implementation within a Python web framework, featuring a responsive Bootstrap frontend and a concurrent-safe SQLite backend.
 
-## Overview
+## 📸 Screenshots
 
-This project allows registration of students, entry and update of subject grades, viewing of averages with performance labels, and exploration of the roster through search, filters, and two viewing modes. A statistics modal retrieves summary counts and the overall average from a JSON endpoint to support review and demo scenarios.
+| Dashboard | Student Roster |
+| --- | --- |
+| <img src="screenshots/Home_Page.png" width="100%" alt="Home Page"> | <img src="screenshots/All_student_list.png" width="100%" alt="Student List"> |
 
-## Screenshots
+| Grade Entry | Analytics |
+| --- | --- |
+| <img src="screenshots/add_grade.png" width="100%" alt="Add Grade"> | <img src="screenshots/stats.png" width="100%" alt="Statistics"> |
 
-Add images by updating the src attribute values below after uploading screenshots to the repository or an image host
+---
 
-<p align="center">
-  <img src="\screenshots\Home_Page.png" alt="Home page overview" width="900">
-</p>
+## ⚙️ How the Code Works
 
-<br><br>
+This application is built on a **Model-View-Controller (MVC)** influenced architecture, separating data persistence, routing logic, and user interface presentation.
 
-<p align="center">
-  <img src="\screenshots\All_student_list.png" alt="All students list with search and filters" width="900">
-</p>
+### 1. The Backend (Flask & Routing)
 
-<br><br>
+The entry point of the application is `run.py`. It initializes the Flask app and the `StudentTracker` database instance.
 
-<p align="center">
-  <img src="\screenshots\add_new_student.png" alt="Add new students" width="900">
-</p>
+* **Routing:** The app maps URL endpoints (e.g., `/add_student`, `/add_grade`) to Python functions.
+* **Validation:** Before any data reaches the database, `run.py` performs server-side validation. For example, it ensures grade inputs are floats between 0-100 and that roll numbers are not empty.
+* **API Endpoint:** The `/api/statistics` route serves JSON data asynchronously, allowing the frontend to load stats without refreshing the page.
 
-<p align="center">
-  <img src="\screenshots\add_grade.png" alt="Add Grade" width="900">
-</p>
+### 2. The Database Logic (Persistence Layer)
 
-<p align="center">
-  <img src="\screenshots\stats.png" alt="Stats" width="900">
-</p>
+The core logic resides in `database.py`. Unlike projects using heavy ORMs (like SQLAlchemy), this project uses **raw SQLite3** queries for maximum control and transparency.
 
-## Features
+* **Thread Safety:** The `StudentTracker` class utilizes `threading.Lock()` to prevent race conditions during write operations (Concurrent CRUD), ensuring data integrity when multiple requests hit the server simultaneously.
+* **Context Management:** A custom context manager `@contextmanager def get_connection(self)` handles the opening and closing of database connections. This ensures that even if an error occurs during a transaction, the connection is closed properly to prevent leaks.
+* **Data Models:**
+* **Students Table:** Stores `name` and a unique `roll_number`.
+* **Grades Table:** Stores `roll_number` (acting as a foreign key), `subject`, and the numeric `grade`.
+* **Indexing:** The initialization script automatically creates SQL indexes (`idx_roll_number`) to optimize query speeds for lookups.
 
-1. Register students with validation for name and unique roll number  
-2. Add and update grades per subject with numeric range checks  
-3. Compute averages and show performance labels and visual indicators  
-4. Explore the roster in table or card layout with client side search and filters  
-5. Sort by name, roll number, subjects count, or average in table view  
-6. Display summary statistics in a modal backed by a JSON endpoint  
-7. Print a concise student summary for quick sharing  
-8. External stylesheet and script for caching and maintainability  
-9. Optional timed refresh to help during live demos
 
-## Technology
 
-Application  
-Flask for routing and server side rendering  
-SQLite for persistence  
-JSON endpoint for statistics
+### 3. The Frontend (Dynamic & Responsive)
 
-Interface  
-Bootstrap for layout and components  
-Bootstrap Icons for visuals  
-Custom stylesheet and script for behavior such as filters, sorting, validation, statistics modal, and print support
+* **Templating:** The app uses **Jinja2** templates (`base.html` inheritance) to render HTML on the server. This allows the backend to inject student data directly into the DOM before it reaches the browser.
+* **JavaScript Automation:** `scripts.js` handles client-side behavior:
+* **Real-time Validation:** Inputs provide immediate visual feedback (green/red outlines) as the user types.
+* **Auto-Refresh:** The dashboard checks for data updates automatically every 4 minutes.
+* **Client-Side Filtering:** The "All Students" table allows searching and filtering by performance level (e.g., "Excellent", "Needs Improvement") entirely in the browser without re-querying the database.
 
-## Getting Started
 
-Prerequisites  
-Python version 3.9 or newer is recommended  
-A virtual environment tool of choice
 
-Setup  
-Create and activate a virtual environment  
-Install project dependencies using the standard Python package manager  
-Start the development server  
-Open the local address in a browser
+---
 
-Configuration  
-Define a strong secret key through an environment variable for production deployments  
-Optionally set a custom port and enable or disable debug mode with environment variables
+## 🚀 Key Features
 
-## Data Model
+* **Duplicate Prevention:** Enforces unique roll numbers at the database level to maintain record integrity.
+* **Smart Grading:** Accepts decimal grades and validates range (0-100). Updates existing records if a subject grade is re-entered.
+* **Performance Analytics:** Automatically calculates averages and assigns qualitative tags (Excellent, Good, Satisfactory) based on score thresholds.
+* **Visual Indicators:** Progress bars and color-coded badges change dynamically based on the grade value (e.g., Green for >90%, Red for <60%).
+* **Responsive Design:** Built with Bootstrap 5, ensuring the interface works on mobile, tablet, and desktop.
 
-Students include name and roll number fields  
-Grades link a roll number to a subject and a numeric grade  
-Indexes are created for efficient lookups and updates on roll numbers
+---
 
-## Endpoints
+## 🛠️ Installation & Setup
 
-Pages  
-GET slash shows the home page with quick actions  
-GET or POST slash add underscore student processes student creation  
-GET or POST slash add underscore grade processes grade creation and updates  
-GET slash view underscore student slash roll number shows the student detail page  
-GET slash view underscore all underscore students lists all students with search and filters
+### Prerequisites
 
-API  
-GET slash api slash statistics returns total students, total grades, and overall average as JSON
+* Python 3.9+
+* pip
 
-## User Experience
+### Steps
 
-Roster exploration  
-Search by name or roll number, filter by performance levels, and toggle between table and card views
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/StudentTracker.git
+cd StudentTracker
 
-Validation and feedback  
-Forms provide client side validation hints and visual feedback  
-Submission disables buttons and shows progress indicators
+```
 
-Statistics and printing  
-A modal fetches statistics through the JSON endpoint  
-A print action renders a concise and readable report for a student
 
-## Deployment
+2. **Create a Virtual Environment**
+```bash
+python -m venv venv
+# Windows
+venv\Scripts\activate
+# Mac/Linux
+source venv/bin/activate
 
-Run the application behind a production grade WSGI server  
-Set environment variables for secret key, port, and debug mode as appropriate for the target platform  
-Use a persistent volume or move to a hosted database service if horizontal scaling is required
+```
 
-## Customization
 
-Branding  
-Update name, email, and professional links in the navigation area
+3. **Install Dependencies**
+```bash
+cd py-app
+pip install -r requirements.txt
 
-Visual style  
-Adjust colors, spacing, and animations through the stylesheet
+```
 
-Behavior  
-Modify filters, sorting, modal content, refresh behavior, validation rules, and print logic in the script
 
-Screenshots  
-Replace the empty src attributes in the screenshots section with the uploaded image links to showcase the application
+*Dependencies include Flask 3.1.0 and Gunicorn 20.1.0.*
+4. **Run the Application**
+```bash
+python run.py
 
-## Troubleshooting
+```
 
-Styling or scripts not applied  
-Confirm the layout template references the external stylesheet and script  
-Use a hard reload and verify in browser developer tools that assets load successfully
 
-Template rendering issues  
-Verify that each template extends the base layout and defines the expected content blocks  
-Check server logs for template name mismatches or syntax errors
+The application will start on `http://localhost:5000` (or the port defined in your environment variables).
 
-Data issues  
-Ensure the application has write access to the local database file  
-If the schema is corrupted during development, remove the file and restart to reinitialize tables
+---
 
-Routes  
-Ensure the student detail route includes the roll number segment in the URL and links are constructed correctly
+## 📂 Project Structure
+
+```text
+StudentTracker/
+├── README.md                 # Project Documentation
+├── screenshots/              # Images for README
+├── py-app/
+│   ├── run.py                # Application Entry Point & Routes
+│   ├── database.py           # Database Class & SQL Logic
+│   ├── students.db           # SQLite Database File
+│   ├── requirements.txt      # Python Dependencies
+│   ├── static/
+│   │   ├── css/
+│   │   │   └── styles.css    # Custom Styling
+│   │   └── js/
+│   │       └── scripts.js    # Client-side Logic
+│   └── templates/            # HTML Templates (Jinja2)
+│       ├── base.html         # Base Layout
+│       ├── home.html         # Dashboard
+│       ├── add_student.html  # Registration Form
+│       ├── add_grade.html    # Grade Entry Form
+│       ├── view_student.html # Individual Student Report
+│       └── view_all_students.html # Roster View
+
+```
+
+---
+
+## 🔮 Future Improvements
+
+* **Authentication:** Add login functionality for teachers/admins.
+* **Export:** Add functionality to export the student list to CSV/Excel.
+* **API Expansion:** Create a full REST API for third-party integrations.
+
+---
+
+**Built with Flask, SQLite, and Bootstrap.**
